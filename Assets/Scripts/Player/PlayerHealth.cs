@@ -12,8 +12,8 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private GameObject dieEffect;
     [SerializeField] private AudioClip hitSound;
     [SerializeField] private AudioClip dieSound;
-    [SerializeField] private float deathAnimationDuration = 0.5f;
-    [SerializeField] private float disappearAnimationDuration = 0.25f;
+    [SerializeField] private float deathDelay = 1f;
+    [SerializeField] private float disappearDelay = 0.5f;
 
     public int MaxHealth => maxHealth;
 
@@ -68,16 +68,16 @@ public class PlayerHealth : MonoBehaviour
         SoundManager.Instance?.PlaySound(dieSound);
         if (dieEffect != null)
             Instantiate(dieEffect, transform.position, Quaternion.identity);
-        OnDeath?.Invoke();
-        StartCoroutine(DeathSequence());
+        StartCoroutine(DeathRoutine());
     }
 
-    private IEnumerator DeathSequence()
+    private IEnumerator DeathRoutine()
     {
-        yield return new WaitForSeconds(deathAnimationDuration);
+        yield return new WaitForSeconds(deathDelay);
         anim?.PlayDisappearAnimation();
-        yield return new WaitForSeconds(disappearAnimationDuration);
+        yield return new WaitForSeconds(disappearDelay);
         gameObject.SetActive(false);
+        OnDeath?.Invoke();
         RespawnManager.Instance?.HandlePlayerDeath();
     }
 

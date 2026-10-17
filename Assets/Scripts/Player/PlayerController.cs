@@ -252,7 +252,7 @@ public class PlayerController : MonoBehaviour
         if (jumpBufferCounter > 0f && coyoteCounter > 0f)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-            SoundManager.Instance.PlaySound(jumpSound);
+            SoundManager.Instance?.PlaySound(jumpSound);
 
             coyoteCounter = 0f;
             jumpBufferCounter = 0f;

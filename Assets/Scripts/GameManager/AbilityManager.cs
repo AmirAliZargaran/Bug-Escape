@@ -10,8 +10,8 @@ public class AbilityManager : MonoBehaviour
     public static readonly Dictionary<AbilityType, bool> Unlocked = new()
     {
         { AbilityType.Dash,       true },
-        { AbilityType.DoubleJump, true },
-        { AbilityType.HoldJump,   true },
+        { AbilityType.DoubleJump, false },
+        { AbilityType.HoldJump,   false },
         { AbilityType.FastFall,   true },
     };
 
