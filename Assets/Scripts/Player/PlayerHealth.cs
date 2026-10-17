@@ -14,6 +14,8 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private AudioClip dieSound;
     [SerializeField] private float deathDelay = 1f;
     [SerializeField] private float disappearDelay = 0.5f;
+    [SerializeField] private float deathVelocityMultiplier = 0.35f;
+    [SerializeField] private float maxDeathSlideSpeed = 3.5f;
 
     public int MaxHealth => maxHealth;
 
@@ -26,6 +28,8 @@ public class PlayerHealth : MonoBehaviour
     private PlayerController playerController;
     private SpriteRenderer spriteRenderer;
     private PlayerAnimation anim;
+    private Rigidbody2D rb;
+    private float defaultDrag;
     private bool isDying;
 
     private void Awake()
@@ -34,6 +38,9 @@ public class PlayerHealth : MonoBehaviour
         playerController = GetComponent<PlayerController>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<PlayerAnimation>();
+        rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+            defaultDrag = rb.drag;
     }
 
     private void Start() => OnHealthChanged?.Invoke(CurrentHealth);
@@ -64,6 +71,13 @@ public class PlayerHealth : MonoBehaviour
         CurrentHealth = 0;
         OnHealthChanged?.Invoke(CurrentHealth);
         playerController.enabled = false;
+        if (rb != null)
+        {
+            float dampedX = rb.velocity.x * deathVelocityMultiplier;
+            float clampedX = Mathf.Clamp(dampedX, -maxDeathSlideSpeed, maxDeathSlideSpeed);
+            rb.velocity = new Vector2(clampedX, rb.velocity.y);
+            rb.drag = Mathf.Max(defaultDrag, 5f);
+        }
         anim?.PlayDieAnimation();
         SoundManager.Instance?.PlaySound(dieSound);
         if (dieEffect != null)
@@ -103,6 +117,11 @@ public class PlayerHealth : MonoBehaviour
         CurrentHealth = maxHealth;
         IsInvincible = false;
         isDying = false;
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero;
+            rb.drag = defaultDrag;
+        }
     }
 
     private IEnumerator InvincibilityRoutine()
