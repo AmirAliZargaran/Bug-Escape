@@ -188,9 +188,9 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector2(faceDir * dashSpeed, 0f);
 
         if (IsGrounded)
-            SoundManager.Instance.PlaySound(groundDashSound);
+            SoundManager.Instance?.PlaySound(groundDashSound);
         else
-            SoundManager.Instance.PlaySound(midAirDashSound);
+            SoundManager.Instance?.PlaySound(midAirDashSound);
 
         SpawnDashEffect();
 
@@ -281,7 +281,7 @@ public class PlayerController : MonoBehaviour
         {
             canDoubleJump = false;
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-            SoundManager.Instance.PlaySound(doubleJumpSound);
+            SoundManager.Instance?.PlaySound(doubleJumpSound);
 
             jumpBufferCounter = 0f;
 

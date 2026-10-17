@@ -12,6 +12,8 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private GameObject dieEffect;
     [SerializeField] private AudioClip hitSound;
     [SerializeField] private AudioClip dieSound;
+    [SerializeField] private float deathAnimationDuration = 0.5f;
+    [SerializeField] private float disappearAnimationDuration = 0.25f;
 
     public int MaxHealth => maxHealth;
 
@@ -24,6 +26,7 @@ public class PlayerHealth : MonoBehaviour
     private PlayerController playerController;
     private SpriteRenderer spriteRenderer;
     private PlayerAnimation anim;
+    private bool isDying;
 
     private void Awake()
     {
@@ -37,7 +40,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        if (CurrentHealth <= 0 || IsInvincible || playerController.IsWinning)
+        if (CurrentHealth <= 0 || IsInvincible || isDying || playerController.IsWinning)
             return;
 
         CurrentHealth -= damage;
@@ -46,7 +49,7 @@ public class PlayerHealth : MonoBehaviour
         if (CurrentHealth <= 0)
         { Die(); return; }
 
-        SoundManager.Instance.PlaySound(hitSound);
+        SoundManager.Instance?.PlaySound(hitSound);
         playerController.ApplyKnockback(4f);
         anim?.PlayHitAnimation();
         StartCoroutine(InvincibilityRoutine());
@@ -54,17 +57,40 @@ public class PlayerHealth : MonoBehaviour
 
     public void Die()
     {
-        SoundManager.Instance.PlaySound(dieSound);
+        if (isDying)
+            return;
+
+        isDying = true;
+        CurrentHealth = 0;
+        OnHealthChanged?.Invoke(CurrentHealth);
+        playerController.enabled = false;
+        anim?.PlayDieAnimation();
+        SoundManager.Instance?.PlaySound(dieSound);
         if (dieEffect != null)
             Instantiate(dieEffect, transform.position, Quaternion.identity);
         OnDeath?.Invoke();
+        StartCoroutine(DeathSequence());
+    }
+
+    private IEnumerator DeathSequence()
+    {
+        yield return new WaitForSeconds(deathAnimationDuration);
+        anim?.PlayDisappearAnimation();
+        yield return new WaitForSeconds(disappearAnimationDuration);
         gameObject.SetActive(false);
-        RespawnManager.Instance.HandlePlayerDeath();
+        RespawnManager.Instance?.HandlePlayerDeath();
     }
 
     public void ActivePlayer()
     {
         gameObject.SetActive(true);
+        if (playerController != null)
+            playerController.enabled = true;
+        if (anim != null)
+        {
+            anim.enabled = true;
+            anim.EnableAnimator();
+        }
     }
 
     public void Heal(int healAmount)
@@ -75,6 +101,8 @@ public class PlayerHealth : MonoBehaviour
     public void Reset()
     {
         CurrentHealth = maxHealth;
+        IsInvincible = false;
+        isDying = false;
     }
 
     private IEnumerator InvincibilityRoutine()
