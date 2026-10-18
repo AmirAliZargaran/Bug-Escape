@@ -293,7 +293,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7075472, g: 0.28368637, b: 0.35717127, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -598,7 +598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63ca40249f854dc41ac082fe119653c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 1
+  maxHealth: 3
   invincibleLoopCount: 7
   dieEffect: {fileID: 0}
   hitSound: {fileID: 0}
@@ -606,7 +606,8 @@ MonoBehaviour:
   deathDelay: 1
   disappearDelay: 0.5
   deathVelocityMultiplier: 1
-  maxDeathSlideSpeed: 3.5
+  maxDeathSlideSpeed: 10
+  deathDrag: 1.5
 --- !u!114 &1994107160
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -14,8 +14,9 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private AudioClip dieSound;
     [SerializeField] private float deathDelay = 1f;
     [SerializeField] private float disappearDelay = 0.5f;
-    [SerializeField] private float deathVelocityMultiplier = 0.35f;
-    [SerializeField] private float maxDeathSlideSpeed = 3.5f;
+    [SerializeField] private float deathVelocityMultiplier = 0.6f;
+    [SerializeField] private float maxDeathSlideSpeed = 5f;
+    [SerializeField] private float deathDrag = 1.5f;
 
     public int MaxHealth => maxHealth;
 
@@ -76,7 +77,7 @@ public class PlayerHealth : MonoBehaviour
             float dampedX = rb.velocity.x * deathVelocityMultiplier;
             float clampedX = Mathf.Clamp(dampedX, -maxDeathSlideSpeed, maxDeathSlideSpeed);
             rb.velocity = new Vector2(clampedX, rb.velocity.y);
-            rb.drag = Mathf.Max(defaultDrag, 5f);
+            rb.drag = deathDrag;
         }
         anim?.PlayDieAnimation();
         SoundManager.Instance?.PlaySound(dieSound);
