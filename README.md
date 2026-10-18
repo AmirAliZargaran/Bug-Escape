@@ -40,14 +40,18 @@ The project is in its early stages of development. The primary focus so far has 
 ---
 
 ## ⚙️ Setup & Installation
-To run and inspect the project in the Unity Editor:
+To run and inspect the project in the Unity Editor, first clone the repository:
 
-1. Clone or download this repository:
-```bash
-   git clone https://github.com/<your-username>/Bug-Scape.git
-   
-Open Unity Hub.
-Click on Add and select the root folder of this cloned repository.
-Launch the project using Unity Unity 2022.1.24f1
-👨‍💻 Developer
-Developed by Amirali as part of a game development coursework/portfolio.
+`git clone https://github.com/AmirAliZargaran/Bug-Scape.git`
+
+Then follow these steps:
+- Open **Unity Hub**.
+- Click on **Add** and select the root folder of this project.
+- Launch the project using **Unity 2022.1.24f1**.
+
+---
+
+## 👨‍💻 Developer
+Developed by **Amirali** as part of a game development coursework/portfolio.
+
+---
